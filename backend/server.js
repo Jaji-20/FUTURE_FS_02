@@ -1,24 +1,32 @@
-const Data = require("./models/Data");
+require("dotenv").config(); // ✅ Load env variables
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+const Data = require("./models/Data");
+
 const app = express();
 
+// ✅ Middleware
 app.use(cors());
 app.use(express.json());
 
-// ✅ Use environment variable (Render + MongoDB Atlas)
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log(err));
-
-// TEST ROUTE
-app.get("/", (req, res) => {
-  res.send("API Working");
+// ✅ MongoDB connection (with safety check)
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("✅ MongoDB Connected"))
+.catch((err) => {
+  console.log("❌ MongoDB Error:", err);
 });
 
-// GET API
+// ✅ TEST ROUTE
+app.get("/", (req, res) => {
+  res.send("API Working 🚀");
+});
+
+// ✅ GET API
 app.get("/api/data", async (req, res) => {
   try {
     const data = await Data.find();
@@ -28,7 +36,7 @@ app.get("/api/data", async (req, res) => {
   }
 });
 
-// POST API (ADD)
+// ✅ POST API (ADD)
 app.post("/api/data", async (req, res) => {
   try {
     const newData = new Data({
@@ -45,7 +53,7 @@ app.post("/api/data", async (req, res) => {
   }
 });
 
-// UPDATE
+// ✅ UPDATE
 app.put("/api/data/:id", async (req, res) => {
   try {
     const updated = await Data.findByIdAndUpdate(
@@ -59,7 +67,7 @@ app.put("/api/data/:id", async (req, res) => {
   }
 });
 
-// DELETE
+// ✅ DELETE
 app.delete("/api/data/:id", async (req, res) => {
   try {
     await Data.findByIdAndDelete(req.params.id);
@@ -69,9 +77,9 @@ app.delete("/api/data/:id", async (req, res) => {
   }
 });
 
-// ✅ Use dynamic port (VERY IMPORTANT)
+// ✅ Dynamic PORT (Render requirement)
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
