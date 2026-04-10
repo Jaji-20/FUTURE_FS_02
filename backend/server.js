@@ -12,14 +12,9 @@ app.use(cors());
 app.use(express.json());
 
 // ✅ MongoDB connection (with safety check)
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log("✅ MongoDB Connected"))
-.catch((err) => {
-  console.log("❌ MongoDB Error:", err);
-});
+mongoose.connect("mongodb+srv://admin:Admin@123@cluster0.zxbbg7y.mongodb.net/crm")
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch(err => console.log("❌ MongoDB Error:", err));
 
 // ✅ TEST ROUTE
 app.get("/", (req, res) => {
